@@ -3,10 +3,4 @@
 requires node and npm. In particular requires "npm install prompt-sync"
 
 # Problems
-Doesn't yet display a hangman figure
-
-|----|
-|   _O_
-|    |
-|   / \  
-|_____
+Could do with some colour
