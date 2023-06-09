@@ -1,6 +1,5 @@
 const prompt = require('prompt-sync')();
-
-
+const words = require('word-list-json')
 
 
 const makeHiddenWord = (word) => {
@@ -12,10 +11,15 @@ const makeHiddenWord = (word) => {
     return hideWord
 }
 
+const randomWord = () => {
+    let idx = Math.floor(Math.random()*words.length)
+    return words[idx]
+}
+
 
 
 const startGame = () => {
-    let secretWord = "substantiation"
+    let secretWord = randomWord()
     let guesses = []
     let numOfGuesses = 7
     let displayWord = makeHiddenWord(secretWord)
@@ -117,11 +121,13 @@ const guessFunc = (secretWord, displayWord, guesses, numOfGuesses) => {
             } else {
                 console.log("You have no guesses left")
                 console.log("You lose")
+                console.log(`The word was ${secretWord}`)
                 return restartGame()
             }
         }
     } else if (checkGuess(userGuess, guesses) == "same guess") {
         console.log(`You have already guessed ${userGuess}. Please try again`)
+        console.log(`Letters guessed so far: ${guesses}`)
         return guessFunc(secretWord, displayWord, guesses, numOfGuesses)
     } else {
         console.log(`Sorry, ${userGuess} is an unrecognised input. Please try again`)
