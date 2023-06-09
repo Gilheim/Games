@@ -1,9 +1,7 @@
 const prompt = require('prompt-sync')();
 
 
-let secretWord = "substantiation"
-let guesses = []
-let numOfGuesses = 7
+
 
 const makeHiddenWord = (word) => {
     let length = word.length
@@ -14,9 +12,43 @@ const makeHiddenWord = (word) => {
     return hideWord
 }
 
-let displayWord = makeHiddenWord(secretWord)
 
-const checkGuess = (guess) => {
+
+const startGame = () => {
+    let secretWord = "substantiation"
+    let guesses = []
+    let numOfGuesses = 7
+    let displayWord = makeHiddenWord(secretWord)
+    const userStart = prompt('Fancy a game of hangman?  (y/n)    >     ')
+    if (userStart.toLowerCase() === "y" || userStart.toLowerCase() === "yes") {
+        return guessFunc(secretWord, displayWord, guesses, numOfGuesses)
+    } else if (userStart.toLowerCase() === "n" || userStart.toLowerCase() === "no") {
+        return
+    } else {
+        console.log(`Sorry, ${userStart} is an unrecognised input. Please try again`)
+        return startGame()
+    }
+}
+
+const restartGame = () => {
+    let secretWord = "substantiation"
+    let guesses = []
+    let numOfGuesses = 7
+    let displayWord = makeHiddenWord(secretWord)
+    const userStart = prompt('Another game?  (y/n)    >     ')
+    if (userStart.toLowerCase() === "y" || userStart.toLowerCase() === "yes") {
+        return guessFunc(secretWord, displayWord, guesses, numOfGuesses)
+    } else if (userStart.toLowerCase() === "n" || userStart.toLowerCase() === "no") {
+        return
+    } else {
+        console.log(`Sorry, ${userStart} is an unrecognised input. Please try again`)
+        return restartGame()
+    }
+}
+
+
+
+const checkGuess = (guess, guesses) => {
     let alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
     if (alphabet.includes(guess.toLowerCase())) {
         if(guesses.includes(guess.toLowerCase()) == false) {
@@ -37,51 +69,7 @@ const checkWin = (word) => {
     }
 }
 
-const guessFunc = () => {
-    console.log(displayWord)
-    const userGuess = prompt('Guess a letter   >    ')
-    if (checkGuess(userGuess) === true) {
-        if (secretWord.includes(userGuess.toLowerCase())){
-            console.log("Good guess")
-            replaceLetters(userGuess.toLowerCase())
-            if(!checkWin(displayWord)) {
-                if(numOfGuesses > 1){
-                    console.log(`You have ${numOfGuesses} guesses left`)
-                    return guessFunc()
-                } else {
-                    console.log(`You have ${numOfGuesses} guess left`)
-                    return guessFunc()
-                }
-            } else {
-                console.log(`YOU WIN!! The word was ${secretWord}`)
-                return
-            }
-        } else {
-            console.log("Bad guess")
-            guesses.push(userGuess.toLowerCase())
-            numOfGuesses--
-            if(numOfGuesses > 1){
-                console.log(`You have ${numOfGuesses} guesses left`)
-                return guessFunc()
-            } else if (numOfGuesses == 1) {
-                console.log(`You have ${numOfGuesses} guess left`)
-                return guessFunc()
-            } else {
-                console.log("You have no guesses left")
-                console.log("You lose")
-                return
-            }
-        }
-    } else if (checkGuess(userGuess) == "same guess") {
-        console.log(`You have already guessed ${userGuess}. Please try again`)
-        return guessFunc()
-    } else {
-        console.log(`Sorry, ${userGuess} is an unrecognised input. Please try again`)
-        return guessFunc()
-    }
-}
-
-const replaceLetters = (letter) => {
+const replaceLetters = (letter, guesses, displayWord, secretWord) => {
     let i = 0
     guesses.push(letter)
     let newDisplayWord = ""
@@ -97,5 +85,48 @@ const replaceLetters = (letter) => {
     return displayWord
 }
 
+const guessFunc = (secretWord, displayWord, guesses, numOfGuesses) => {
+    console.log(displayWord)
+    const userGuess = prompt('Guess a letter   >    ')
+    if (checkGuess(userGuess, guesses) === true) {
+        if (secretWord.includes(userGuess.toLowerCase())){
+            console.log("Good guess")
+            displayWord = replaceLetters(userGuess.toLowerCase(), guesses, displayWord,secretWord)
+            if(!checkWin(displayWord)) {
+                if(numOfGuesses > 1){
+                    console.log(`You have ${numOfGuesses} guesses left`)
+                    return guessFunc(secretWord, displayWord, guesses, numOfGuesses)
+                } else {
+                    console.log(`You have ${numOfGuesses} guess left`)
+                    return guessFunc(secretWord, displayWord, guesses, numOfGuesses)
+                }
+            } else {
+                console.log(`YOU WIN!! The word was ${secretWord}`)
+                return restartGame()
+            }
+        } else {
+            console.log("Bad guess")
+            guesses.push(userGuess.toLowerCase())
+            numOfGuesses--
+            if(numOfGuesses > 1){
+                console.log(`You have ${numOfGuesses} guesses left`)
+                return guessFunc(secretWord, displayWord, guesses, numOfGuesses)
+            } else if (numOfGuesses == 1) {
+                console.log(`You have ${numOfGuesses} guess left`)
+                return guessFunc(secretWord, displayWord, guesses, numOfGuesses)
+            } else {
+                console.log("You have no guesses left")
+                console.log("You lose")
+                return restartGame()
+            }
+        }
+    } else if (checkGuess(userGuess, guesses) == "same guess") {
+        console.log(`You have already guessed ${userGuess}. Please try again`)
+        return guessFunc(secretWord, displayWord, guesses, numOfGuesses)
+    } else {
+        console.log(`Sorry, ${userGuess} is an unrecognised input. Please try again`)
+        return guessFunc(secretWord, displayWord, guesses, numOfGuesses)
+    }
+}
 
-guessFunc()
+startGame()
