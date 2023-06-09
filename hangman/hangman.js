@@ -35,7 +35,7 @@ const startGame = () => {
 }
 
 const restartGame = () => {
-    let secretWord = "substantiation"
+    let secretWord = randomWord()
     let guesses = []
     let numOfGuesses = 7
     let displayWord = makeHiddenWord(secretWord)
@@ -62,6 +62,57 @@ const checkGuess = (guess, guesses) => {
         }
     } else {
         return false 
+    }
+}
+
+const displayHangman = (numOfGuesses) => {
+    if (numOfGuesses == 6){
+        console.log("|_____")
+        return
+    } else if(numOfGuesses == 5) {
+        console.log("|")
+        console.log("|    ")
+        console.log("|    ")
+        console.log("|    ")
+        console.log("|_____")
+        return
+    } else if (numOfGuesses == 4) {
+        console.log("|----|")
+        console.log("|    ")
+        console.log("|    ")
+        console.log("|    ")
+        console.log("|_____")
+        return
+    } else if (numOfGuesses == 3) {
+        console.log("|----|")
+        console.log("|    O")
+        console.log("|    ")
+        console.log("|    ")
+        console.log("|_____")
+        return
+    } else if (numOfGuesses == 2) {
+        console.log("|----|")
+        console.log("|    O")
+        console.log("|    |")
+        console.log("|    ")
+        console.log("|_____")
+        return
+    } else if (numOfGuesses == 1) {
+        console.log("|----|")
+        console.log("|   _O_")
+        console.log("|    |")
+        console.log("|    ")
+        console.log("|_____")
+        return
+    } else if (numOfGuesses == 0) {
+        console.log("|----|")
+        console.log("|   _O_")
+        console.log("|    |")
+        console.log("|   / \\\ ")
+        console.log("|_____")
+        return
+    } else {
+        return
     }
 }
 
@@ -99,9 +150,11 @@ const guessFunc = (secretWord, displayWord, guesses, numOfGuesses) => {
             if(!checkWin(displayWord)) {
                 if(numOfGuesses > 1){
                     console.log(`You have ${numOfGuesses} guesses left`)
+                    displayHangman(numOfGuesses)
                     return guessFunc(secretWord, displayWord, guesses, numOfGuesses)
                 } else {
                     console.log(`You have ${numOfGuesses} guess left`)
+                    displayHangman(numOfGuesses)
                     return guessFunc(secretWord, displayWord, guesses, numOfGuesses)
                 }
             } else {
@@ -114,12 +167,15 @@ const guessFunc = (secretWord, displayWord, guesses, numOfGuesses) => {
             numOfGuesses--
             if(numOfGuesses > 1){
                 console.log(`You have ${numOfGuesses} guesses left`)
+                displayHangman(numOfGuesses)
                 return guessFunc(secretWord, displayWord, guesses, numOfGuesses)
             } else if (numOfGuesses == 1) {
                 console.log(`You have ${numOfGuesses} guess left`)
+                displayHangman(numOfGuesses)
                 return guessFunc(secretWord, displayWord, guesses, numOfGuesses)
             } else {
                 console.log("You have no guesses left")
+                displayHangman(numOfGuesses)
                 console.log("You lose")
                 console.log(`The word was ${secretWord}`)
                 return restartGame()
@@ -127,7 +183,7 @@ const guessFunc = (secretWord, displayWord, guesses, numOfGuesses) => {
         }
     } else if (checkGuess(userGuess, guesses) == "same guess") {
         console.log(`You have already guessed ${userGuess}. Please try again`)
-        console.log(`Letters guessed so far: ${guesses}`)
+        console.log(`Letters guessed so far: ${guesses.sort()}`)
         return guessFunc(secretWord, displayWord, guesses, numOfGuesses)
     } else {
         console.log(`Sorry, ${userGuess} is an unrecognised input. Please try again`)
