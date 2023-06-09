@@ -13,7 +13,11 @@ const makeHiddenWord = (word) => {
 
 const randomWord = () => {
     let idx = Math.floor(Math.random()*words.length)
-    return words[idx]
+    if(words[idx]<= 2){
+        return randomWord()
+    } else {
+        return words[idx]
+    }
 }
 
 
