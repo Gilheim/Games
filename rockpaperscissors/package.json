@@ -1,0 +1,17 @@
+{
+  "name": "rockpaperscissors",
+  "version": "1.0.0",
+  "description": "",
+  "main": "rockpaperscissors.js",
+  "type": "commonjs",
+  "//comment": "line above is best way to fix Cannot use import statement outside a module error",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ansi-colors": "^4.1.3"
+  }
+}
